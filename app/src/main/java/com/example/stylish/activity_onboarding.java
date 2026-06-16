@@ -33,7 +33,7 @@ public class activity_onboarding extends AppCompatActivity {
         // --- SESSION LOGIC START ---
         if (loginHelper.isLoggedIn()) {
             // ১. যদি ইউজার লগইন থাকে, সরাসরি মেইন অ্যাক্টিভিটি
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, HomePage.class));
             finish();
             return; // নিচের কোড আর রান হবে না
         } else if (!loginHelper.isFirstTimeLaunch()) {

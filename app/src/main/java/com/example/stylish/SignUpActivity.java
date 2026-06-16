@@ -17,9 +17,18 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -112,6 +121,44 @@ public class SignUpActivity extends AppCompatActivity {
         } else {
             // ============================================================
             // DATABASE / SERVER CODE STARTS HERE
+
+            // ১. ইউআরএল থেকে কুয়েরি প্যারামিটারগুলো বাদ দিন
+            String url = "https://bishalmd5309.website/php/config.php";
+
+// ২. Request.Method.POST ব্যবহার করুন
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    // সার্ভার থেকে রেসপন্স আসলে এখানে পাবেন
+                    Toast.makeText(SignUpActivity.this, "Server: " + response, Toast.LENGTH_SHORT).show();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    Toast.makeText(SignUpActivity.this, "Error: " + volleyError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }) {
+                // ৩. POST মেথডের জন্য ডাটা পাঠানোর Map যোগ করুন
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("name", name);
+                    params.put("email", email);
+                    params.put("password", pass); // আপনার PHP-তে যে কি (Key) নাম দেওয়া আছে সেটাই লিখবেন
+                    return params;
+                }
+            };
+
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            requestQueue.add(stringRequest);
+            Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+
+
+
+
+
             // ============================================================
             Toast.makeText(this, "Registration Successful!", Toast.LENGTH_SHORT).show();
         }
